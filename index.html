@@ -260,9 +260,8 @@
         <div class="letter-container">
             <h1 class="letter-text font-bold mb-4">kepada : belaaaaaaaaaaa</h1>
             <p class="letter-text">
-                Saya yang sering di panggil ( udin😭 )
-                Menyatakan permintaan maaf yang sebesar-besarnya,
-                mohon di maaafkan karna kita manusia bukan nabi boy🤟
+                Saya Haikal Ma'ruf yang sering di panggil (udin😭 )
+                Menyatakan permintaan maaf yang sebesar-besarnya, mohon di maaafkan karna kita manusia bukan nabi boy🤟
             </p>
             <p class="letter-text mt-4"></p>
             <div class="flex justify-center">
@@ -331,9 +330,14 @@
         let sfxPlayer;
         let finalMusicPlayer;
 
-        // URL untuk backsound dan sound effect
+        // URL untuk sound effect
         const laughSfxUrl = 'https://close-purple-xsv5fkstis.edgeone.app/panggillailaa1_7413274587594640658.mp3';
         const finalMusicUrl = 'https://close-maroon-tn86exbqxb.edgeone.app/soundeffects4you_7200033759113235718.mp3';
+        const backsoundUrl = 'https://alert-lime-5flucvuttf.edgeone.app/PTT-20250514-WA0322.mp3'; // URL untuk backsound utama
+
+        // Inisialisasi audio player
+        let audioPlayer = new Audio();
+        let currentAudioUrl = '';
 
         // Fungsi untuk menampilkan halaman tertentu dan menyembunyikan yang lain
         function showPage(pageToShow) {
@@ -379,16 +383,18 @@
         
         // Fungsi untuk memainkan audio
         function playAudio(url, loop = false) {
-            const player = new Audio(url);
-            player.loop = loop;
-            player.play().catch(e => console.error('Error playing audio:', e));
-            return player;
+            if (currentAudioUrl !== url) {
+                audioPlayer.src = url;
+                currentAudioUrl = url;
+            }
+            audioPlayer.loop = loop;
+            audioPlayer.play().catch(e => console.error('Error playing audio:', e));
         }
 
-        // Fungsi untuk menghentikan semua audio
-        function stopAllAudio() {
-            if (sfxPlayer) sfxPlayer.pause();
-            if (finalMusicPlayer) finalMusicPlayer.pause();
+        // Fungsi untuk menghentikan audio
+        function stopAudio() {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
         }
         
         // Fungsi untuk memulai animasi dekorasi di Halaman 1
@@ -435,6 +441,7 @@
             clearAnimations(page1);
             showPage(page2);
             startHeartAnimation();
+            playAudio(backsoundUrl, true); // Mulai backsound saat interaksi pertama
         });
         page2Btn.addEventListener('click', () => {
             clearAnimations(page2);
@@ -442,14 +449,16 @@
         });
         page3Btn.addEventListener('click', () => {
             clearAnimations(page3);
+            stopAudio(); // Hentikan backsound
             showPage(page4);
             startLaughEmojiAnimation();
             playAudio(laughSfxUrl, false);
         });
         page4Btn.addEventListener('click', () => {
             clearAnimations(page4);
-            stopAllAudio();
+            stopAudio(); // Hentikan SFX ketawa
             showPage(page5);
+            playAudio(backsoundUrl, true); // Lanjutkan backsound
         });
         page5Btn.addEventListener('click', () => {
             clearAnimations(page5);
@@ -457,10 +466,10 @@
         });
         page6Btn.addEventListener('click', () => {
             clearAnimations(page6);
-            stopAllAudio();
-            finalMusicPlayer = playAudio(finalMusicUrl, true);
+            stopAudio(); // Hentikan backsound
             showPage(page7);
             startMoneyConfettiAnimation();
+            playAudio(finalMusicUrl, true); // Mulai musik terakhir
         });
 
         // Saat dokumen selesai dimuat, tampilkan Halaman 1
